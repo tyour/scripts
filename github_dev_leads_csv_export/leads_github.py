@@ -2,10 +2,13 @@ import requests
 import json
 import csv
 import time
+import logging
 from datetime import datetime
 
+logging.warning("hello")
+
 # Sets access
-AUTH_TOKEN = "65116425bc8f0d7d9a7b9e12e4659b1f8f828214"
+AUTH_TOKEN = "b24e2cf2f4cdfd2469a82100b6b80676cd612341"
 USER_SEARCH_ENDPOINT = "https://api.github.com/search/users"
 
 # NOTE: Delete if not needed but don't rename,
@@ -47,7 +50,7 @@ user_list = [] # user_list is an `list` of tuples that match order of CSV header
 while page_index < (pages + 1):
 	print("Processing page " + str(page_index) + "...")
 
-	  params.update({"page": page_index})
+	params.update({"page": page_index})
 	# Detail: r0 is a search request, r1 is a user request with info received from search results
 	r0 = requests.get(
 	    (endpoint),
@@ -70,7 +73,10 @@ while page_index < (pages + 1):
 		user_list = user_list + list_of_new_data
 		print(" ---> Success: user list now contains " + str(len(user_list)) + " entries." )
 		page_index = page_index + 1
-	except:
+
+
+
+	except ResponseError:
 		
 		# If error is received by GitHub API:
 
@@ -105,7 +111,7 @@ while page_index < (pages + 1):
 print("PROCESSING COMPLETE. PREPARING EXPORT...")
 
 # Exported CSV setup
-export_name = "github_user_search_export"
+export_name = "./github_user_search_export"
 g = csv.writer(open(export_name + ".csv","w", newline=""))
 
 g.writerow(CSV_HEADERS)
